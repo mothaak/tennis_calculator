@@ -19,81 +19,132 @@ From there it can be queried about various statistics around the input matches i
 
 ## Solution Explanation
 
-The main components of the solution are:
+The solution follows a modular design with clear separation of concerns:
 
-1. `MatchProcessor`: This class is responsible for processing the input data and calculating the results of the matches. It takes the list of points as input and determines the winner, loser, and the set scores for each match.
+### Core Components
 
-2. `QueryProcessor`: This class handles user queries and provides the requested information based on the calculated results. It supports two types of queries: querying the result of a specific match and querying the games won/lost by a player over the entire tournament.
+1. Models:
+   - `Game`: Handles individual game scoring with deuce and advantage rules
+   - `Set`: Manages set scoring and game transitions
+   - `Match`: Coordinates sets and overall match state
+   - `Tournament`: Manages multiple matches and player statistics
+   - `Points`: Tracks point scoring for players
 
-3. `tennis_calculator_app.py`: This is the main entry point of the application. It reads the input file, processes the matches using the `MatchProcessor`, and handles user queries using the `QueryProcessor`.
+2. Processors:
+   - `MatchProcessor`: Processes match input data and manages tournament state
+   - `QueryProcessor`: Handles query parsing and result generation
 
-The solution also includes a comprehensive test suite to ensure the correctness of the implemented functionality. The tests cover various scenarios and edge cases to validate the behavior of the `MatchProcessor` and `QueryProcessor` classes.
+3. Parsers:
+   - `MatchParser`: Parses input data into structured match format
+
+4. Rules:
+   - Centralized scoring rules and constants
+   - Configurable game, set, and match parameters
+
+### Error Handling
+
+- Custom exceptions for various error scenarios
+- Graceful handling of invalid inputs
+- Comprehensive validation at each level
+
+### Design Principles
+
+- Clear separation of concerns between models and processors
+- Immutable state transitions
+- Robust error handling
+- Comprehensive test coverage
+
+The solution includes extensive test suites:
+- Unit tests for all components
+- Integration tests for end-to-end scenarios
+- Edge case handling verification
 
 ## Setup
 
 ### Prerequisites
 
-Ensure you have Python 3 installed. You can download it from https://www.python.org/.
+Ensure you have Python 3.6+ installed. You can download it from https://www.python.org/.
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies and package in development mode:
+
+```bash
+pip3 install -r requirements.txt
+pip3 install -e .
+```
 
 ### Directory Structure
 
-Ensure your directory structure looks like this:
+The project structure:
 
 ```
-tennis_calculator/
-    __init__.py
-    match_processor.py
-    query_processor.py
-    tennis_calculator_app.py
-    tests/
-        test_data/
-            full_tournament.txt
-        __init__.py
-        test_match_processor.py
-        test_query_processor.py
-        test_integration.py
-        test_input.txt
+.
+├── README.md
+├── setup.py
+├── setup.cfg
+├── requirements.txt
+├── .flake8
+├── runtime.txt
+└── tennis_calculator/
+    ├── __init__.py
+    ├── core/
+    │   ├── processors/
+    │   │   ├── match_processor.py
+    │   │   └── query_processor.py
+    │   ├── models/
+    │   │   ├── game.py
+    │   │   ├── match.py
+    │   │   ├── points.py
+    │   │   ├── set.py
+    │   │   └── tournament.py
+    │   ├── parsers/
+    │   │   └── match_parser.py
+    │   ├── rules.py
+    │   └── exceptions.py
+    └── tests/
+        ├── integration/
+        │   └── test_end_to_end.py
+        ├── unit/
+        │   └── core/
+        │       ├── models/
+        │       ├── parsers/
+        │       └── processors/
+        └── test_data/
+            ├── test_input.txt
+            └── full_tournament.txt
 ```
 
 ### Running the Application
 
-To run the application with a specific input file, use the following command:
+Run the application by specifying the input file:
 
-```
-python3 tennis_calculator_app.py <input_file>
-```
-
-# Example:
-
-```
-python3 tennis_calculator_app.py tests/test_data/full_tournament.txt
+```bash
+python3 -m tennis_calculator.tennis_calculator_app <input_file>
 ```
 
 ### Running the Tests
 
-To run the tests, use the following commands from your terminal:
+Run all tests with pytest:
 
-#### Unit Tests
-
-```
-python3 -m unittest tests/test_match_processor.py
-python3 -m unittest tests/test_query_processor.py
+```bash
+python3 -m pytest tennis_calculator/tests/ -v
 ```
 
-#### Integration Tests
+For test coverage report:
 
-```
-python3 -m unittest tests/test_integration.py
-```
-
-#### All Tests
-
-To run all tests at once 
-```
-python3 -m unittest discover -s tests
+```bash
+python3 -m pytest tennis_calculator/tests/ --cov=tennis_calculator
 ```
 
-These commands will execute the tests and provide the results in the terminal.
+### Code Quality
+
+Run flake8 for code quality checks:
+
+```bash
+flake8 .
+```
 
 ## Input
 
@@ -216,3 +267,21 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Author
 Developed by Moditha Akalanka.
+
+### Code Quality and Linting
+
+The project uses Flake8 for code quality and style checking. The configuration is in `.flake8` file.
+
+To run Flake8:
+```bash
+flake8 .
+```
+
+## Cyclomatic Complexity
+
+We use [radon](https://pypi.org/project/radon/) to measure complexity:
+
+```bash
+pip install radon
+radon cc -s tennis_calculator
+```
