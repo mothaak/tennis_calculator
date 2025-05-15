@@ -1,8 +1,14 @@
-# Ignore Python bytecode and cache files
+# Python
 __pycache__/
 *.py[cod]
+*.egg-info/
+*.egg
+.pytest_cache/
+.coverage
 
-# Ignore VSCode settings
+# IDE
 .vscode/
+.idea/
 
+# OS
 .DS_Store

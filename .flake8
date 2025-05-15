@@ -1,0 +1,25 @@
+[flake8]
+max-line-length = 88
+extend-ignore = E203,W503,D100,D104,D415,PT009,PT027,C901,E128,W391,W291,W292
+
+exclude = 
+    .git,
+    __pycache__,
+    build,
+    dist,
+    *.egg-info
+
+# Match Black's defaults
+max-complexity = 12
+
+# Specific to our project
+per-file-ignores =
+    __init__.py:F401
+    tests/*:E501,D100,D101,D102,D103
+    tennis_calculator_app.py:C901
+
+# Encourage docstrings
+docstring-convention = google
+
+# Simplify plugin settings
+extend-select = B,B9,C,I,SIM 
